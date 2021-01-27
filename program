@@ -1,0 +1,1355 @@
+#include<iostream>
+#include<string.h>
+#include <ctime>
+#include <exception>
+#include <stdexcept>
+#include <fstream>
+#include <vector>
+#include <list>
+#include <iterator>
+#include <map>
+#include <fstream>
+#include <set>
+
+using namespace std;
+using std::runtime_error;
+
+
+class id;
+class Antrenor{
+private:
+    char* nume;
+    char* prenume;
+    int varsta;
+    int aniexperienta;
+    int varsta_inceput;
+    const char Sex;
+
+public:
+    Antrenor():Sex('M'){}
+    Antrenor(int varsta, int aniexperienta, int varsta_inceput):Sex('M'){
+        this->varsta=varsta;
+        this->aniexperienta=aniexperienta;
+        this->varsta_inceput=varsta_inceput;
+    }
+    Antrenor(char* nume,char* prenume):Sex('M'){
+        this->nume=new char[strlen(this->nume)+1];
+        strcpy(this->nume,nume);
+        this->prenume=new char[strlen(this->prenume)+1];
+        strcpy(this->prenume,prenume);
+    }
+    void AniExperienta(){
+        int ani;
+        ani=varsta-varsta_inceput;
+        this->aniexperienta=ani;
+    }
+
+
+    char* getNume() {
+        return this->nume;
+    }
+    void setNume(char* l) {
+        if (this->nume != nullptr)
+            delete[] this->nume;
+        this->nume = new char[strlen(l) + 1];
+        this->nume = l;
+    }
+    char* getPrenume() {
+        return this->prenume;
+    }
+    void setPrenume(char* p) {
+        if (this->prenume != nullptr)
+            delete[] this->prenume;
+        this->prenume = new char[strlen(p) + 1];
+        this->prenume = p;
+    }
+
+    int getVarsta(){
+        return this->varsta;
+    }
+    void setVarsta(){
+        int varsta;
+        this->varsta=varsta;
+    }
+
+    int getAniExperienta(){
+        return this->aniexperienta;
+    }
+    void setAniExperienta(){
+        int aniexperienta;
+        this->aniexperienta=aniexperienta;
+    }
+
+    int getVarstaInceput(){
+        return this->varsta_inceput;
+    }
+    void setVarstaInceput(){
+        int varsta_inceput;
+        this->varsta_inceput=varsta_inceput;
+    }
+
+    friend ostream& operator<< (ostream& out, const Antrenor antrenor) {
+        out<<antrenor.nume<<" "<<antrenor.prenume<<" in varsta de "<<antrenor.varsta<<" ani cu "<<antrenor.aniexperienta<<" ani de experienta"<<'\n';
+        return out;
+    }
+
+    friend istream& operator>> (istream& in, Antrenor& antrenor) {
+        char auxn[100],auxp[100];
+
+        cout << "Introduceti numele antrenorului: ";
+        in>>auxn;
+        antrenor.nume=new char[strlen(auxn)+1];
+        strcpy(antrenor.nume,auxn);
+
+        cout << "Introduceti prenumele antrenorului: ";
+        in>>auxp;
+        antrenor.prenume=new char[strlen(auxp)+1];
+        strcpy(antrenor.prenume,auxp);
+
+        cout<< "Introduceti varsta: ";
+        in>>antrenor.varsta;
+
+        cout<< "Introduceti varsta la inceputul carierei: ";
+        in>>antrenor.varsta_inceput;
+
+        return in;
+    }
+    Antrenor& operator =(const Antrenor& antrenor) {
+
+        if (this != &antrenor) {
+
+            this->varsta = antrenor.varsta;
+            this->varsta_inceput=antrenor.varsta_inceput;
+        }
+
+        return *this;
+    }
+
+    Antrenor(const Antrenor &antrenor):Sex('M') {
+        this->nume = new char[strlen(antrenor.nume) + 1];
+        strcpy(this->nume, antrenor.nume);
+
+        this->prenume = new char[strlen(antrenor.prenume) + 1];
+        strcpy(this->prenume, antrenor.prenume);
+
+        this->varsta=antrenor.varsta;
+        this->varsta_inceput=antrenor.varsta_inceput;
+        this->aniexperienta=antrenor.aniexperienta;
+    }
+
+
+
+
+    ~Antrenor(){}
+
+
+};
+
+
+
+class Echipa
+{
+private:
+    char data_f[100];
+    char* nume;
+    char gen='M';
+    int nrJucatori;
+    int echipament;
+    float* kmalergati;
+    float suma_km;
+    double mediegoluri;
+    const int ID;
+    bool j;
+
+
+public:
+    static int nrAntrenori;
+    Echipa():ID(1) {
+    }
+
+    Echipa(char* nume):ID(1){
+        this->nume = nume;
+    }
+    Echipa(double posesiem,char gen, char data_f[100]):ID(1){
+        this->mediegoluri=mediegoluri;
+        this->gen=gen;
+        strcpy(this->data_f, data_f);
+
+    }
+
+    void setNrJucatori() {
+        //initializam nr de jucatori
+        int nr1;
+        nr1 = rand() % 11 + 12;
+        nrJucatori = nr1;
+    }
+    int VerificareEchipament(){
+        //verificam daca fiecare jucator are echipament
+        j=echipament<nrJucatori;
+        if(j){
+            cout<<"Echipa nu are destul echipament"<<'\n';
+            return 1;}
+        else
+            return 2;
+    }
+
+    void setingKm() {
+        //initializam km alergati
+        float km[100];
+        for (int i = 0; i < this->nrJucatori; i++)
+        {
+            srand(time(NULL));
+            km[i] = ((float)rand() / RAND_MAX) * (10 - 1) + 1;
+        }
+        this->kmalergati = km;
+        SumaKm();
+    }
+
+    void SumaKm() {
+        float suma_km = 0;
+        for (int i = 0; i < this->nrJucatori; i++)
+        {
+            suma_km = suma_km + this->kmalergati[i];
+        }
+        this->suma_km = suma_km;
+    }
+    float getSumaKm() {
+        return this->suma_km;
+
+    }
+    int getEchipament(){
+        return this->echipament;
+    }
+    void setEchipament(){
+        srand(time(NULL));
+        int ec;
+        ec=rand()%5+21;
+        this->echipament=ec;
+    }
+    void setSumaKm(float suma_km){
+        this->suma_km=suma_km;
+    }
+
+    void setMedieGoluri() {
+
+        double pos;
+        pos=((double)rand() / RAND_MAX) * (3 - 1) + 1;
+        this->mediegoluri = pos;
+    }
+    double getMedieGoluri() {
+        return this->mediegoluri;
+    }
+
+    void setDatafinantare(char f[100]) {
+        strcpy(this->data_f, f);
+    }
+    char* getDatafinantare() {
+        return this->data_f;
+    }
+
+    float* getKm() {
+        return this->kmalergati;
+    }
+
+    void setGen(char gen){
+        this->gen=gen;
+    }
+
+    char getGen(){
+        return this->gen;
+    }
+
+
+    void setNume(char* nume)
+    {
+        if (this->nume != nullptr)
+            delete[] this->nume;
+        this->nume = new char[strlen(nume) + 1];
+        this->nume = nume;
+
+    }
+    char* getNume()
+    {
+        return this->nume;
+    }
+    void setNrjucatori(int nrJucatori) {
+        this->nrJucatori = nrJucatori;
+    }
+    int getNrjucatori() {
+        return this->nrJucatori;
+    }
+
+
+    friend ostream& operator<< (ostream& out, const Echipa ech) {
+        out <<"Echipa "<<ech.nume<<" a fost infintata pe data de "<<ech.data_f<<'\n';
+        return out;
+    }
+
+    friend istream& operator>> (istream& in, Echipa& ech) {
+
+        char aux[100];
+        cout<< ech.getNume()<<" a fost fondata pe data de: ";
+        in>>aux;
+        strcpy(ech.data_f,aux);
+
+        return in;
+    }
+
+    Echipa(const Echipa &ech):ID(1){
+        strcpy(this->data_f, ech.data_f);
+        this->gen=ech.gen;
+        this->echipament=echipament;
+        this->nume=new char[strlen(ech.nume)+1];
+        strcpy(this->nume, ech.nume);
+        this->nrJucatori=ech.nrJucatori;
+        this->kmalergati=new float[ech.nrJucatori];
+        /*for(int i=0; i<ech.nrJucatori; i++)
+        {
+            kmalergati[i] = ((float)rand() / RAND_MAX) * (10 - 1) + 1;
+        }*/
+        this->kmalergati=ech.kmalergati;
+        /*suma_km=0;
+        for (int i = 0; i < ech.nrJucatori; i++)
+        {
+            suma_km = suma_km + kmalergati[i];
+        }*/
+        this->suma_km = ech.suma_km;
+        this->mediegoluri=ech.mediegoluri;
+        bool j1,j2;
+    }
+
+    Echipa& operator/(Echipa x) {
+        Echipa *rez=new Echipa(*this);
+        rez->mediegoluri = (this->getMedieGoluri() + x.mediegoluri)/2;
+        return *rez;
+    }
+
+    bool operator ==(Echipa& ech)
+    {
+        if(this->nrJucatori==nrJucatori)
+            return true;
+        else
+            return false;
+    }
+    bool operator >(Echipa& ech)
+    {
+        if(this->mediegoluri>ech.mediegoluri)
+            return true;
+        else
+            return false;
+    }
+
+    Echipa& operator =(const Echipa& echp) {
+        return *this;
+    }
+
+
+    Echipa& operator+(Echipa x) {
+        Echipa *rez=new Echipa(*this);
+        rez->suma_km = this->getSumaKm() + x.suma_km;
+        return *rez;
+    }
+
+    const Echipa operator++(int){
+
+        Echipa aux(*this);
+
+        this->echipament++;
+
+        return aux;
+
+
+    }
+    const Echipa operator++(){
+        this->echipament++;
+
+        return *this;
+    }
+
+    explicit operator int(){
+        return (int)this->suma_km;
+
+    }
+
+    float operator [](int index) {
+
+        if (index < this->nrJucatori && index >= 0)
+            return this->kmalergati[index];
+        else {
+            cout << "Index invalid";
+            return -1;
+
+        }
+    }
+
+
+
+
+    ~Echipa(){}
+
+};
+
+
+class Meci
+{
+private:
+    char sponsor[100];
+    char serie;
+    const int nrEchipe=2;
+    char* data;
+    int scor_echipa1;
+    int scor_echipa2;
+    int nrSpectatori;
+    float pret_bilet;
+    double profit;
+    int* nrBilet;
+    Echipa e1;
+    Echipa e2;
+    bool scr1, scr2, scr3;
+
+
+public:
+
+    static int nrReprize;
+    Meci():nrEchipe(2){}
+    Meci(float pret_bilet, double profit, int nrSpectatori){
+        this->pret_bilet=pret_bilet;
+        this->profit=profit;
+        this->nrSpectatori=nrSpectatori;
+    }
+
+    Meci(const Echipa &echipa1, const Echipa &echipa2): e1(echipa1) , e2(echipa2), nrEchipe(2) {
+        this->e1.setNrJucatori();
+        this->e1.setingKm();
+        this->e1.setMedieGoluri();
+        this->e1.setEchipament();
+
+        this->e2.setNrJucatori();
+        this->e2.setingKm();
+        this->e2.setMedieGoluri();
+        this->e2.setEchipament();
+
+        scr1 = false;
+        scr2 = false;
+        scr3 = false;
+    }
+
+    void setNrSpectatori() {
+        //initializam nr de spectatori
+        int nrs;
+        nrs = rand() % 50000+1;
+        nrSpectatori = nrs;
+    }
+    void Castiguri(){
+        profit=pret_bilet*nrSpectatori;
+    }
+    void setScor1(){
+        int s1;
+        s1=rand() % 5 + 1;
+        scor_echipa1=s1;
+
+    }
+    void setScor2(){
+        int s2;
+        s2=rand() % 5 + 1;
+        scor_echipa2=s2;
+
+    }
+
+    int scor() {
+        int x;
+        scr1 = scor_echipa1 > scor_echipa2;
+        scr2 = scor_echipa2 > scor_echipa1;
+        scr3 = scor_echipa1 == scor_echipa2;
+        if (scr1)
+        {
+            cout << "echipa " << e1.getNume() << " castiga cu " << this->scor_echipa1 << " la " << this->scor_echipa2<<'\n';
+            x=1;
+
+
+
+        }
+        else if (scr2)
+        {
+
+            cout << "echipa " << e2.getNume() << " castiga cu " << this->scor_echipa2 << " la " << this->scor_echipa1<<'\n';
+            x=2;
+        }
+        else if (scr3) {
+            cout << "meciul se termina cu egalitate " << '\n';
+            x=3;
+        }
+        return x;
+    }
+
+    int getScore1() {
+        return this->scor_echipa1;
+    }
+    int getScore2() {
+        return this->scor_echipa2;
+    }
+    void setScore1(int scor_echipa1) {
+        this->scor_echipa1 = scor_echipa1;
+    }
+    void setScore2(int scor_echipa2) {
+        this->scor_echipa2 = scor_echipa2;
+    }
+    void setSponosor(char l[100]) {
+        strcpy(this->sponsor, l);
+    }
+    char* getSponsor() {
+        return this->sponsor;
+    }
+    char* getData() {
+        return this->data;
+    }
+    void setData(char* d) {
+        if (this->data != nullptr)
+            delete[] this->data;
+        this->data = new char[strlen(d) + 1];
+        this->data = d;
+    }
+    char getSerie() {
+        return this->serie;
+    }
+    void setSerie(char serie) {
+        this->serie = serie;
+    }
+
+    void setPretbilet(float pret_bielt){
+        this->pret_bilet=pret_bilet;
+    }
+    float getPretbilet() {
+        return this->pret_bilet;
+    }
+
+    int getNrspectatori() {
+        return this->nrSpectatori;
+    }
+
+    void setProfit(double profit){
+        this->profit=profit;
+    }
+
+    int* getNrBilet(){
+        return this->nrBilet;
+    }
+
+    void setNrBilet(){
+        int a[nrSpectatori+1];
+        for (int i = 0; i <nrSpectatori; i++)
+            a[i] = i;
+        this->nrBilet = a;
+
+    }
+
+    double getProfit(){
+        return this->profit;
+    }
+
+    Echipa& getEchipa1() {
+        return e1;
+    }
+    Echipa& getEchipa2() {
+        return e2;
+    }
+
+    friend ostream& operator<< (ostream& out, const Meci meci1) {
+        out << " seria " << meci1.serie << " ,pe data de " << meci1.data << " unde ";
+        return out;
+    }
+
+
+
+
+    friend istream& operator>> (istream& in, Meci& meci1) {
+
+        char auxs[100],auxd[100];
+
+        cout << "Data: ";
+        in>>auxd;
+        meci1.data=new char[strlen(auxd)+1];
+        strcpy(meci1.data,auxd);
+
+
+        cout << "Seria: ";
+        in >> meci1.serie;
+
+        cout<<"Pret bilet: ";
+        in >> meci1.pret_bilet;
+
+        cout<< "Sponsor: ";
+        in>>auxs;
+        strcpy(meci1.sponsor,auxs);
+
+        return in;
+    }
+
+    Meci& operator =(const Meci& meci) {
+
+        if (this != &meci) {
+
+            this->scor_echipa1 = meci.scor_echipa1;
+            this->scor_echipa2 = meci.scor_echipa2;
+
+        }
+        return *this;
+    }
+
+
+    Meci(const Meci &mecic):nrEchipe(2){
+        strcpy(this->sponsor, mecic.sponsor);
+        serie=mecic.serie;
+
+        this->data=new char[strlen(mecic.data)+1];
+        strcpy(this->data, mecic.data);
+        this->scor_echipa1=mecic.scor_echipa1;
+        this->scor_echipa2=mecic.scor_echipa2;
+        this->nrSpectatori=mecic.nrSpectatori;
+
+        this->nrBilet=new int[mecic.nrSpectatori];
+        for(int i=0; i<mecic.nrSpectatori; i++)
+            this->nrBilet[i]=i;
+        this->pret_bilet=mecic.pret_bilet;
+        this->profit=mecic.profit;
+        this->e1=mecic.e1;
+        this->e2=mecic.e2;
+        bool scr1, scr2, scr3;
+    }
+
+
+    const Meci operator++(int){
+
+        //Meci aux(*this);
+
+        this->pret_bilet++;
+
+        //return aux;
+
+
+    }
+    const Meci operator++(){
+        this->pret_bilet++;
+
+        return *this;
+    }
+
+    explicit operator int(){
+        return (int)this->profit;
+
+    }
+    Meci& operator+(const Meci& x) {
+        Meci rez;
+        float pret_biletaux = this->pret_bilet + x.pret_bilet;
+        int nrSpectatoriaux = this->nrSpectatori * x.nrSpectatori;
+        rez.pret_bilet = pret_biletaux;
+        rez.nrSpectatori = nrSpectatoriaux;
+        return rez;
+
+    }
+    Meci operator /(float a)
+    {
+        a=0.1;
+        this->profit=profit*a;
+        return *this;
+    }
+
+    float operator [](int index){
+
+        if(index<this->nrSpectatori && index>=0)
+            return this->nrBilet[index];
+        else {cout<<"Index invalid";
+            return -1;
+
+        }
+
+    }
+    bool operator ==(Meci& meci)
+    {
+        if(this->pret_bilet==meci.pret_bilet)
+            return true;
+        else
+            return false;
+    }
+    bool operator >(Meci& meci)
+    {
+        if(this->profit>meci.profit)
+            return true;
+        else
+            return false;
+    }
+
+    ~Meci(){}
+};
+
+
+
+class Stadion {
+private:
+    int nrLocuri;
+    char* nume;
+    char* locatie;
+    const int nrPorti;
+    Meci s;
+    bool lc;
+
+public:
+
+    Stadion():nrPorti(2){}
+    Stadion(const Meci &meci):s(),nrPorti(2){
+        this->s.setNrSpectatori();
+
+    }
+
+    char* getNume() {
+        return this->nume;
+    }
+    void setNume(char* n) {
+        if (this->nume != nullptr)
+            delete[] this->nume;
+        this->nume = new char[strlen(n) + 1];
+        this->nume = n;
+    }
+
+    char* getLocatie() {
+        return this->locatie;
+    }
+    void setLocatie(char* l) {
+        if (this->locatie != nullptr)
+            delete[] this->locatie;
+        this->locatie = new char[strlen(l) + 1];
+        this->locatie = l;
+    }
+
+    int getNrLoc(){
+        return this->nrLocuri;
+    }
+    void setNrLoc(){
+        int nrl;
+        nrl=rand()%10000+50000;
+        this->nrLocuri=nrl;
+        if(nrLocuri<s.getNrspectatori())
+            throw runtime_error("Stadionul nu are destule locuri");
+    }
+
+    Meci& getMeci() {
+        return s;
+    }
+
+    friend ostream& operator<< (ostream& out, const Stadion stadion) {
+        out <<"Meciul a avut loc pe stadionul "<<stadion.nume<<" in localitatea "<<stadion.locatie;
+        return out;
+    }
+
+
+    friend istream& operator>> (istream& in, Stadion& stadion) {
+
+        char auxn[100],auxl[100];
+
+        cout << "Introduceti stadionul dorit: ";
+        in>>auxn;
+        stadion.nume=new char[strlen(auxn)+1];
+        strcpy(stadion.nume,auxn);
+
+        cout << "Locatie: ";
+        in>>auxl;
+        stadion.locatie=new char[strlen(auxl)+1];
+        strcpy(stadion.locatie,auxl);
+
+        return in;
+    }
+
+
+
+
+
+};
+
+class Proprietar:public Stadion{
+private:
+    string nume;
+public:
+    Proprietar(Stadion p1, string nume):Stadion(p1){
+
+        this->nume=nume;
+
+    }
+
+    friend ostream& operator<<(ostream& out, const Proprietar& s)
+    {
+
+        out<<(Stadion&)s;
+        out<<"Proprietarul stadionului este "<<s.nume;
+        return out;
+
+    }
+
+    friend istream& operator>>(istream& in, Proprietar& s){
+
+        in>>(Stadion&)s;
+        cout<<"Introduceti proprietar: ";
+        in>>s.nume;
+        return in;
+
+    }
+
+};
+
+
+class EchipeAntrenate:public Antrenor{
+private:
+    int nrech;
+public:
+    EchipeAntrenate(Antrenor ant, int nrech):Antrenor(ant){
+        this->nrech=nrech;
+
+    }
+
+    friend ostream& operator<<(ostream& out, const EchipeAntrenate& s)
+    {
+
+        out<<(Antrenor&)s;
+        out<<"Numarul de echipe antrenate "<<s.nrech;
+        return out;
+
+    }
+
+    friend istream& operator>>(istream& in, EchipeAntrenate& s){
+
+        in>>(Antrenor&)s;
+        cout<<"Introduceti numarul de echipe antrenate: ";
+        in>>s.nrech;
+        return in;
+
+    }
+
+};
+
+class Venit{
+public:
+    virtual float profit()=0;
+    virtual int taxe()=0;
+
+};
+
+class Teren{
+protected:
+    int lungime;
+    int latime;
+public:
+    virtual int calculeazaArie()=0;
+    friend ostream& operator<<(ostream& out,const Teren& t){
+
+        out<<"Terenul are lungimea de "<<t.lungime<<" m si latimea de "<<t.latime<<" m\n";
+        return out;
+
+
+    }
+    friend istream& operator >>(istream& in, Teren&t){
+
+        cout<<"Lungimea este: ";
+        in>>t.lungime;
+        cout<<"Latimea este: ";
+        in>>t.latime;
+        return in;
+
+    }
+
+
+
+};
+
+class Arie:public Teren{
+protected:
+    string tip_gazon;
+public:
+    int calculeazaArie(){
+
+        return lungime*latime;
+        if (lungime<45&&latime<90)
+            throw runtime_error("Nu ati introdus dimensiunile corecte");
+
+    }
+
+    friend ostream& operator<<(ostream& out,const Arie& t)
+    {
+        out<<(Teren&)t;
+        out<<"Tipul gazonului: "<<t.tip_gazon;
+        return out;
+
+    }
+    friend istream& operator >>(istream& in, Arie& t){
+
+        in>>(Teren&)t;
+        cout<<"Tipul gazonului: ";
+        in>>t.tip_gazon;
+        return in;}
+
+
+};
+
+class EchipaCamp{
+private:
+    int scor;
+    char* nume;
+    int id;
+public:
+
+    EchipaCamp(){
+        this->id=id;
+        this->scor=scor;
+        this->nume=new char[strlen("anonim")+1];
+        strcpy(this->nume,"anonim");
+    }
+    char* getNume(){
+        return this->nume;
+    }
+    void setNume(char* a){
+
+        if(this->nume!=nullptr)
+            delete[] this->nume;
+
+        this->nume=new char[strlen(a)+1];
+        strcpy(this->nume,a);
+
+    }
+    int getID(){
+        return this->id;
+    }
+    void setID(){
+        int i;
+        this->id=i;
+    }
+
+    int getScor(){
+        return this->scor;
+    }
+
+    void setScor()
+    {
+        int a;
+        a=rand()%5+1;
+        scor=a;
+    }
+
+    friend istream& operator>> (istream& in,  EchipaCamp& ec){
+
+        char aux[100];
+
+        cout<<"\n Introduceti numele ";
+        in>>aux;
+
+        if(ec.nume!=NULL)
+            delete[] ec.nume;
+
+        ec.nume=new char[strlen(aux)+1];
+        strcpy(ec.nume,aux);
+
+        cout<<"Intoduceti ID-ul ";
+        in>>ec.id;
+        return in;
+    }
+
+};
+
+
+
+class Produs{
+private:
+    char* nume;
+    char* brand;
+    float pret;
+public:
+    Produs(){
+        this->nume=new char[strlen("anonim")+1];
+        strcpy(this->nume,"anonim");
+        this->brand=new char[strlen("anonim")+1];
+        strcpy(this->brand,"anonim");
+        this->pret=pret;
+    }
+    friend istream& operator>> (istream& in,  Produs& p){
+
+        char aux1[100],aux2[100];
+
+        cout<<"\n Introduceti produsul ";
+        in>>aux1;
+
+        if(p.nume!=NULL)
+            delete[] p.nume;
+
+        p.nume=new char[strlen(aux1)+1];
+        strcpy(p.nume,aux1);
+
+        cout<<"\n Introduceti brand-ul ";
+        in>>aux2;
+
+        if(p.brand!=NULL)
+            delete[] p.brand;
+
+        p.brand=new char[strlen(aux2)+1];
+        strcpy(p.brand,aux2);
+
+
+
+        cout<<"Intoduceti pretul ";
+        in>>p.pret;
+        return in;
+    }
+    friend ostream& operator<<(ostream& out,const Produs& p)
+    {
+        out<<p.nume<<" "<<p.brand;
+        out<<" "<<p.pret<<" lei";
+        return out;
+
+    }
+
+    friend ifstream& operator>> (ifstream& fIn,  Produs& p){
+
+        char aux1[100],aux2[100];
+        fIn.getline(aux1, 100);
+        if (p.nume != NULL)
+            delete[]p.nume;
+        p.nume = new char[strlen(aux1) + 1];
+        strcpy(p.nume, aux1);
+        fIn.getline(aux2, 100);
+        if (p.brand != NULL)
+            delete[]p.brand;
+        p.brand = new char[strlen(aux2) + 1];
+        strcpy(p.brand, aux2);
+
+        fIn>>p.pret;
+        return fIn;
+    }
+    friend ofstream& operator<<(ofstream& fout,const Produs& p)
+    {
+        fout<<"Produsul: "<<p.nume<<" "<<p.brand;
+        fout<<"Pretul "<<p.pret<<" lei";
+        return fout;
+
+    }
+
+    char* getNume(){
+        return this->nume;
+    }
+    void setNume(char* a){
+
+        if(this->nume!=nullptr)
+            delete[] this->nume;
+
+        this->nume=new char[strlen(a)+1];
+        strcpy(this->nume,a);
+
+    }
+
+    char* getBrand(){
+        return this->brand;
+    }
+    void setBrand(char* b){
+
+        if(this->brand!=nullptr)
+            delete[] this->brand;
+
+        this->brand=new char[strlen(b)+1];
+        strcpy(this->brand,b);
+
+    }
+
+    int getPret(){
+        return this->pret;
+    }
+    void setPret(){
+        int i;
+        this->pret=i;
+    }
+    Produs(const Produs& c)  {
+        if (c.nume != NULL){
+            this->nume = new char[strlen(c.nume) + 1];
+            strcpy(this->nume, c.nume); }
+        if (c.brand != NULL){
+            this->brand = new char[strlen(c.brand) + 1];
+            strcpy(this->brand, c.brand); }
+
+        this->pret = c.pret;
+
+    }
+
+};
+
+
+
+
+
+
+int Echipa::nrAntrenori=1;
+int Meci::nrReprize=2;
+int main() {
+    int c;
+    cout << "Pentru meci amical apasa 1" << endl;;
+    cout << "Pentru campionat apasa 2" << endl;
+    cout << "Pentru articole pentru suporteri apasa 3" << endl;
+    cin >> c;
+    switch (c) {
+        case 1: {
+            char echipa2[100], echipa1[100];
+            int nrj,p,g;
+
+            Antrenor a1;
+            Antrenor a2;
+            cout << "Introduceti echipa 1 ";
+            cin >> echipa1;
+            Echipa e1(echipa1);
+
+            cout << "Introduceti echipa 2 ";
+            cin >> echipa2;
+            Echipa e2(echipa2);
+            Meci s(e1, e2);
+
+            Stadion l(s);
+            cin >> l;
+            cin >> s;
+            s++;
+            s.setScor1();
+            s.setScor2();
+            cout << "Cine crezi ca o sa castige?" << endl;
+            cout << "1. " << e1.getNume() << endl;
+            cout << "2. " << e2.getNume() << endl;
+            cout << "3. Egalitate" << endl;
+            cin >> p;
+            //cout << l;
+            //cout << s;
+            int x=s.scor();
+            switch (p) {
+                case 1: {
+
+                    if (x==1)
+                        cout << "Ai castigat" << endl;
+                    else
+                        cout << "Ai pierdut" << endl;
+                    break;
+
+                }
+                case 2: {
+                    if (x==2)
+                        cout << "Ai castigat" << endl;
+                    else
+                        cout << "Ai pierdut" << endl;
+                    break;
+
+                }
+                case 3: {
+
+                    if (x==3)
+                        cout << "Ai castigat" << endl;
+                    else
+                        cout << "Ai pierdut" << endl;
+                    break;
+
+                }
+
+
+            }
+
+            cout << "Doresti sa vezi detalii despre meci?" << endl;
+            cout << "1. Da" << " " << "2. Nu" << endl;
+            cin >> nrj;
+            switch (nrj) {
+                case 1: {
+
+                    cout<<"Sponsorul meciului: "<<s.getSponsor()<<'\n';
+                    cout<<"Pretul biletului+taxa: "<<s.getPretbilet()<<" lei"<<'\n';
+
+                    s.setNrSpectatori();
+                    //cout<<"Numarul de spectatori: "<<l.getMeci().getNrspectatori()<<'\n';
+                    cout<<"Numarul de spectatori: "<<s.getNrspectatori()<<'\n';
+
+                    s.Castiguri();
+                    cout<<"S-au strans: "<<(int)s.getProfit()<<" lei"<<'\n';
+                    float a;
+                    s=s/a;
+                    cout<<"10% din profituri merg spre donatii, suma: "<<(int)s.getProfit()<<'\n';
+                    Teren *t;
+                    Arie ar;
+                    cin>>ar;
+                    try{
+                    cout<<"Aria terenului este "<<ar.calculeazaArie()<<'\n';}
+                    catch(runtime_error){
+                        cout<<"Aria nu este corecta"<<'\n';
+                    }
+
+                    cout<<"Echipa "<<s.getEchipa1().getNume()<<":"<<'\n';
+                    cin>>e1;
+                    cout<<e1;
+
+                    cin>>a1;
+                    a1.AniExperienta();
+                    cout<<"Antrenor: ";
+                    cout<<a1;
+
+
+
+
+                    cout << "Numarul de jucatori: "<<s.getEchipa1().getNrjucatori()<<'\n';
+                    int x=s.getEchipa1().VerificareEchipament();
+                    if(x==1)
+                        e1++;
+                    cout << "Jucatorii echipei " << s.getEchipa1().getNume() << " au alergat " << s.getEchipa1().getSumaKm() <<" km"<<'\n';
+                    cout << "Medie goluri pe meci: "<<s.getEchipa1().getMedieGoluri()<<'\n';
+
+                    cout<<"Echipa "<<s.getEchipa2().getNume()<<":"<<'\n';
+                    cin>>e2;
+                    cout<<e2;
+
+                    cin>>a2;
+                    a2.AniExperienta();
+                    cout<<"Antrenor: ";
+                    cout<<a2;
+
+                    cout << "Numarul de jucatori: "<<s.getEchipa2().getNrjucatori()<<'\n';
+                    int y=s.getEchipa2().VerificareEchipament();
+                    if(y==1)
+                        e2++;
+                    cout << "Jucatorii echipei " << s.getEchipa2().getNume() << " au alergat " << s.getEchipa2().getSumaKm() <<" km"<< '\n';
+                    cout << "Medie goluri pe meci: "<<s.getEchipa2().getMedieGoluri()<<'\n';
+
+                    cout << "In total s-au alergat: " << (int)(s.getEchipa1() + s.getEchipa2()).getSumaKm()<<" de km"<<'\n';
+
+
+                    break;
+                }
+                case 2:{
+                    break;
+                }
+                default:
+                    break;
+            }
+            break;
+
+        }
+        case 2:{
+
+    string nume_camp;
+    cout<<"Introduceti numele campionatului";
+    cin>>nume_camp;
+
+    EchipaCamp e1,e2,e3,e4,e5,e6,e7,e8;
+    cin>>e1>>e2>>e3>>e4>>e5>>e6>>e7>>e8;
+    map<int, char*>campionat;
+    std::map<int, char*>::iterator it = campionat.begin();
+    campionat.insert(it,pair<int, char*>(e1.getID(),e1.getNume()));
+    campionat.insert(it,pair<int, char*>(e2.getID(),e2.getNume()));
+    campionat.insert(it,pair<int, char*>(e3.getID(),e3.getNume()));
+    campionat.insert(it,pair<int, char*>(e4.getID(),e4.getNume()));
+    campionat.insert(it,pair<int, char*>(e5.getID(),e5.getNume()));
+    campionat.insert(it,pair<int, char*>(e6.getID(),e6.getNume()));
+    campionat.insert(it,pair<int, char*>(e7.getID(),e7.getNume()));
+    campionat.insert(it,pair<int, char*>(e8.getID(),e8.getNume()));
+    cout << "\nEchipele care participa la acest campionat sunt : \n";
+    for (it = campionat.begin(); it != campionat.end(); ++it) {
+        cout << '\t' << it->first
+             << '\t' << it->second << '\n';
+    }
+    cout << endl;
+
+    vector <EchipaCamp> echipe;
+    echipe.push_back(e1);
+    echipe.push_back(e2);
+    echipe.push_back(e3);
+    echipe.push_back(e4);
+    echipe.push_back(e5);
+    echipe.push_back(e6);
+    echipe.push_back(e7);
+    echipe.push_back(e8);
+
+
+    while(echipe.size()>1){
+        int j=0;
+
+        for (auto i =echipe.begin(); i!=echipe.end();i++)
+        {
+
+            echipe[j].setScor();
+            echipe[j+1].setScor();
+                cout << "Meciul " << echipe[j].getNume() << " vs " << echipe[j + 1].getNume() << '\n';
+                if (echipe[j].getScor() > echipe[j + 1].getScor()) {
+                    cout << "Echipa " << echipe[j+1].getNume() << " castiga" << '\n';
+                    echipe.erase(echipe.begin() + j );
+                } else if (echipe[j].getScor() < echipe[j + 1].getScor()) {
+                    cout << "Echipa " << echipe[j].getNume() << " castiga" << '\n';
+                    echipe.erase(echipe.begin() + j+1);
+                }
+                else if(echipe[j].getScor()==echipe[j+1].getScor()){
+                     {
+                        while(echipe[j].getScor()==echipe[j+1].getScor()) {
+                            echipe[j].setScor();
+                            echipe[j + 1].setScor();
+                        }
+                         if (echipe[j].getScor() > echipe[j + 1].getScor()) {
+                             cout << "Echipa " << echipe[j+1].getNume() << " castiga" << '\n';
+                             echipe.erase(echipe.begin() + j );
+                         } else if (echipe[j].getScor() < echipe[j + 1].getScor()) {
+                             cout << "Echipa " << echipe[j].getNume() << " castiga" << '\n';
+                             echipe.erase(echipe.begin() + j+1);
+                         }
+                    }
+                }
+                j++;
+
+
+        }
+
+
+   }
+    int k=0;
+    for (auto i =echipe.begin(); i!=echipe.end();i++)
+        cout<<"Echipa "<<echipe[k].getNume()<<" castiga campionatul "<<nume_camp;
+            break;
+
+
+
+
+
+        }
+        case 3:{
+            ifstream f("Sapca.txt");
+    ifstream e("Tricou.txt");
+    ifstream h("Hanorac.txt");
+    ofstream g("dateOut.txt");
+    Produs a,b,c,d;
+    f>>a;
+    e>>b;
+    h>>c;
+    g<<a;
+
+    list <Produs> listaProduse;
+    list <Produs> :: iterator it;
+    listaProduse.push_back(a);
+    listaProduse.push_back(b);
+    listaProduse.push_back(c);
+
+    cout<<"Produs \t"<<"Brand \t"<<"Pret"<<'\n';
+    int i=0;
+    for(it = listaProduse.begin(); it != listaProduse.end(); ++it)
+    {
+        cout<<(*it).getNume()<<'\t'<<(*it).getBrand()<<'\t'<<(*it).getPret()<<" lei"<<'\n';
+
+    }
+        set<char* > s1;
+    s1.insert(a.getNume());
+    s1.insert(b.getNume());
+    s1.insert(c.getNume());
+    set<char* >::iterator itr;
+    cout << "Articole care se afla in stoc: ";
+    for (itr = s1.begin();itr != s1.end(); ++itr)
+    {
+        cout << *itr << " ";
+    }
+    cout << '\n';
+
+
+        }
+        default:
+            break;
+    }
+
+    return 0;
+}
