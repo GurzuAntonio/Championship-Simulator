@@ -1,2 +1,2 @@
 # Championship-Simulator
-This is a simple C++ app that simulates a football match, or a championship
+Aceasta aplicatie simuleaza un meci de fotbal, sau un campionat, cu echipe introduse de utilizator, scorul este determinat printr-o functie random
